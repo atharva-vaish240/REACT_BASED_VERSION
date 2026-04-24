@@ -1,0 +1,26 @@
+package com.urbanbite.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * DTO returned after successful authentication.
+ * Contains JWT token and basic user info.
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthResponse {
+
+    private String token;
+    private Long id;
+    private String name;
+    private String email;
+    private String plan;
+    private String phone;
+    private String foodType;
+    private String role;
+}

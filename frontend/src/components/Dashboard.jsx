@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-const Dashboard = ({ user, setUser }) => {
-    const navigate = useNavigate();
+import { useAuth } from '../context/AuthContext';
 
-    const Logout = () => {
-        setUser({
-            name: 'Guest',
-            plan: 'Monthly',
-            phone: ''
-        });
+const Dashboard = () => {
+    const navigate = useNavigate();
+    const { user, logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
         navigate('/');
     };
+
     return (
         <div className="container py-5">
             <div className="row">
@@ -17,21 +17,20 @@ const Dashboard = ({ user, setUser }) => {
                     <div className="card shadow-sm border-0 h-100">
                         <div className="card-body text-center">
                             <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" width="100" className="mb-3" />
-                            <h4 className="fw-bold">{user.name}</h4>
-                            <p className="text-muted">Plan: <span className="badge bg-accent">{user.plan}</span></p>
-
+                            <h4 className="fw-bold">{user?.name || 'Guest'}</h4>
+                            <p className="text-muted">Plan: <span className="badge bg-accent">{user?.plan || 'None'}</span></p>
+                            <p className="text-muted small mb-3">{user?.email}</p>
                             <div className="d-grid">
-                                <button className="btn btn-outline-danger" onClick={Logout}>Logout</button>
+                                <button className="btn btn-outline-danger" onClick={handleLogout}>Logout</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div className="col-md-8">
                     <div className="card shadow-sm border-0 mb-4">
                         <div className="card-body">
                             <h5 className="card-title">Subscription Status</h5>
-                            <p className="mb-1">Active Plan: <strong>{user.plan} Subscription</strong></p>
+                            <p className="mb-1">Active Plan: <strong>{user?.plan || 'None'} Subscription</strong></p>
                             <div className="progress mb-3" style={{ height: "20px" }}>
                                 <div className="progress-bar bg-success" style={{ width: "30%" }}>30%</div>
                             </div>

@@ -1,42 +1,60 @@
 import React, { useState } from 'react';
 import { Modal } from 'bootstrap';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 
-const Home = ({ setUser }) => {
+const Home = () => {
+    const { register, isAuthenticated } = useAuth();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         phone: '',
-        plan: ''
+        password: '',
+        plan: '',
+        foodType: ''
     });
 
     const [alertMessage, setAlertMessage] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.name || !formData.email || !formData.phone || !formData.plan) {
+
+        if (!formData.name || !formData.email || !formData.phone || !formData.password || !formData.plan) {
             setAlertMessage({ type: 'danger', text: 'Please fill out all fields!' });
             return;
         }
 
+        setLoading(true);
+        try {
+            // Register user via backend API — saves to database
+            await register({
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                password: formData.password,
+                plan: formData.plan,
+                foodType: formData.foodType
+            });
 
-        setUser({
-            name: formData.name,
-            plan: formData.plan,
-            phone: formData.phone
-        });
+            // Show success modal
+            const modalElement = document.getElementById('successModal');
+            const successModal = new Modal(modalElement);
+            successModal.show();
 
-
-        const modalElement = document.getElementById('successModal');
-        const successModal = new Modal(modalElement);
-        successModal.show();
-
-        setAlertMessage(null);
+            setAlertMessage(null);
+        } catch (err) {
+            setAlertMessage({ type: 'danger', text: err.message || 'Registration failed. Try again.' });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -118,6 +136,13 @@ const Home = ({ setUser }) => {
            <section className="py-5 bg-light" id="register">
     <div className="container">
         <h2 className="text-center mb-4 fw-bold">Join UrbanBite</h2>
+
+        {isAuthenticated && (
+            <div className="alert alert-success text-center">
+                ✅ You're already subscribed! <a href="/dashboard" className="alert-link">Go to Dashboard</a>
+            </div>
+        )}
+
         <div className="row justify-content-center">
             <div className="col-md-8">
                 <div className="card shadow border-0 p-4">
@@ -157,6 +182,17 @@ const Home = ({ setUser }) => {
                         </div>
 
                         <div className="col-md-6">
+                            <input 
+                                type="password" 
+                                className="form-control" 
+                                name="password" 
+                                placeholder="Create Password" 
+                                value={formData.password} 
+                                onChange={handleChange} 
+                            />
+                        </div>
+
+                        <div className="col-md-6">
                             <select 
                                 className="form-select" 
                                 name="plan" 
@@ -186,8 +222,15 @@ const Home = ({ setUser }) => {
                         </div>
 
                         <div className="col-12 text-center mt-4">
-                            <button type="submit" className="btn btn-success px-5 btn-lg">
-                                Register Now
+                            <button type="submit" className="btn btn-success px-5 btn-lg" disabled={loading}>
+                                {loading ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                                        Subscribing...
+                                    </>
+                                ) : (
+                                    'Register Now'
+                                )}
                             </button>
                         </div>
 
@@ -210,7 +253,10 @@ const Home = ({ setUser }) => {
 
                             <h4>Thank you, {formData.name || 'Foodie'}!</h4>
                             <p className="text-muted">You have selected the <strong>{formData.plan}</strong> plan.</p>
-                            <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">Okay, got it!</button>
+                            <p className="text-muted small">Your account has been created. You're now logged in!</p>
+                            <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal" onClick={() => navigate('/dashboard')}>
+                                Go to Dashboard
+                            </button>
                         </div>
                     </div>
                 </div>
