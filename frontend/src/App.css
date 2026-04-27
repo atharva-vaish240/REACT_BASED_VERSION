@@ -420,41 +420,49 @@ footer span {
   border-color: var(--border-color) !important;
 }
 
-.login-page .btn-register {
-  background-color: var(--secondary-color);
+.menu-bg {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=1920') center/cover no-repeat fixed;
+  min-height: 100vh;
 }
 
-.login-page .btn-register:hover {
-  background-color: #c97200;
+.menu-bg > .container > .text-center.mb-5 h2,
+.menu-bg > .container > .text-center.mb-5 p.text-muted {
+  color: #fff !important;
 }
 
-.login-page .text-lime {
-  color: var(--secondary-color) !important;
+.menu-bg .btn-neon-outline,
+.calories-bg .btn-neon-outline {
+  color: #fff !important;
+  border-color: #fff;
 }
 
-.login-page .form-control:focus {
-  border-color: var(--secondary-color) !important;
-  box-shadow: 0 0 0 3px rgba(229, 133, 13, 0.15);
+.menu-bg .btn-neon-outline:hover,
+.calories-bg .btn-neon-outline:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
-.login-page .glass-card {
-  border-top: 3px solid var(--secondary-color);
+.menu-bg .btn-day {
+  background: rgba(255, 255, 255, 0.9);
 }
 
-.reviews-page .btn-neon {
-  background: var(--secondary-color);
+.menu-bg .custom-alert {
+  background: rgba(255, 255, 255, 0.9);
 }
 
-.reviews-page .btn-neon:hover {
-  background: #c97200;
+.calories-bg {
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1920') center/cover no-repeat fixed;
+  min-height: 100vh;
 }
 
-.reviews-page .glass-card {
-  border-top: 3px solid var(--secondary-color);
+.calories-bg h2 {
+  color: #fff !important;
 }
 
-.reviews-page .form-control:focus,
-.reviews-page textarea:focus {
-  border-color: var(--secondary-color) !important;
-  box-shadow: 0 0 0 3px rgba(229, 133, 13, 0.15);
+.calories-bg .alert-warning {
+  background: rgba(255, 193, 7, 0.15) !important;
+  color: #ffc107 !important;
+  border-color: rgba(255, 193, 7, 0.3) !important;
 }

@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Calories = () => {
+  const navigate = useNavigate();
+
   const calorieData = [
     { name: 'Rajma Chawal', calories: '350 kcal', tags: 'Diabetes, High Protein Diet' },
     { name: 'Jeera Aloo', calories: '180 kcal', tags: 'Weight Gain' },
@@ -11,6 +14,7 @@ const Calories = () => {
   ];
 
   return (
+    <div className="calories-bg">
     <div className="container py-5 min-vh-100">
       <div className="text-center mb-5">
         <h2 className="fw-bold fs-1 mb-3">
@@ -33,6 +37,13 @@ const Calories = () => {
           </div>
         ))}
       </div>
+
+      <div className="text-center mt-5">
+        <button className="btn-neon-outline px-5" onClick={() => navigate("/menu")}>
+          Back to Menu
+        </button>
+      </div>
+    </div>
     </div>
   );
 };

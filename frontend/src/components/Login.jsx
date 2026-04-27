@@ -12,7 +12,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-page d-flex justify-content-center align-items-center py-5 min-vh-100">
+    <div className="d-flex justify-content-center align-items-center py-5 min-vh-100">
       <div className="glass-card p-5 w-100" style={{ maxWidth: '450px' }}>
         <h2 className="fw-bold text-center mb-5">Welcome Back</h2>
 

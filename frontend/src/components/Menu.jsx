@@ -29,6 +29,7 @@ const Menu = () => {
   }, [CurrentDay]);
 
   return (
+    <div className="menu-bg">
     <div className="container py-5 min-vh-100">
       <div className="text-center mb-5">
         <h2 className="fw-bold fs-1 mb-3">Weekly <span className="text-lime">Menu</span></h2>
@@ -77,6 +78,7 @@ const Menu = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
