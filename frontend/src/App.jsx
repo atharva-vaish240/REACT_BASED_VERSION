@@ -30,7 +30,6 @@ function App() {
             <Route path="/reviews" element={<CustomerReviews />} />
             <Route path="/login" element={<Login />} />
 
-            {/* Protected routes — require login */}
             <Route
               path="/dashboard"
               element={
