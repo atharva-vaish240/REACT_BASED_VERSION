@@ -1,0 +1,145 @@
+﻿diff --git a/frontend/src/components/Menu.jsx b/frontend/src/components/Menu.jsx
+index b0d762a..584c2d8 100644
+--- a/frontend/src/components/Menu.jsx
++++ b/frontend/src/components/Menu.jsx
+@@ -11,96 +11,75 @@ const Menu = () => {
+   const [loading, setLoading] = useState(false);
+   const [error, setError] = useState(null);
+ 
+-  // Fallback data matching original frontend (used if API fails)
+   const fallbackMenu = {
+     Monday: { lunch: "Rajma Chawal + Jeera Aloo", dinner: "Mix Veg + 4 Rotis + Dal Fry" },
+     Tuesday: { lunch: "Kadi Pakoda + Rice", dinner: "Paneer Butter Masala + Naan" },
+     Wednesday: { lunch: "Chole Kulche", dinner: "Egg Curry / Malai Kofta + Rice" },
+   };
+ 
+-  // Fetch menu from backend whenever day changes
+   useEffect(() => {
+     setLoading(true);
+-    setError(null);
+-
+     getMenuByDay(CurrentDay)
+-      .then((data) => {
+-        setCurrentMenu(data);
+-        setLoading(false);
+-      })
++      .then(data => setCurrentMenu(data))
+       .catch(() => {
+-        // Graceful fallback to hardcoded data
+-        const fallback = fallbackMenu[CurrentDay] || { lunch: "Menu not available", dinner: "Menu not available" };
+-        setCurrentMenu(fallback);
+-        setError('Using offline menu data');
+-        setLoading(false);
+-      });
++        setCurrentMenu(fallbackMenu[CurrentDay] || { lunch: "Not available", dinner: "Not available" });
++        setError('Displaying offline menu');
++      })
++      .finally(() => setLoading(false));
+   }, [CurrentDay]);
+ 
+   return (
+-    <div className="container py-5">
+-      <h2 className="text-center mb-4 fw-bold">≡ƒôà Weekly Planner</h2>
+-      
+-      <ul className="nav nav-pills justify-content-center mb-4">
++    <div className="menu-bg">
++    <div className="container py-5 min-vh-100">
++      <div className="text-center mb-5">
++        <h2 className="fw-bold fs-1 mb-3">Weekly <span className="text-lime">Menu</span></h2>
++        <p className="text-muted">Know what's fueling you this week.</p>
++      </div>
++
++      <div className="d-flex justify-content-center flex-wrap gap-2 mb-5">
+         {days.map(day => (
+-          <li className="nav-item" key={day}>
+-            <button 
+-              className={`nav-link ${CurrentDay === day ? 'active' : ''}`}
+-              onClick={() => setCurrentDay(day)}
+-            >
+-              {day}
+-            </button>
+-          </li>
++          <button
++            key={day}
++            className={`btn-day ${CurrentDay === day ? 'active' : ''}`}
++            onClick={() => setCurrentDay(day)}
++          >
++            {day}
++          </button>
+         ))}
+-      </ul>
++      </div>
+ 
+-      {error && (
+-        <div className="alert alert-warning text-center py-1 mb-3" role="alert">
+-          <small>ΓÜá∩╕Å {error}</small>
+-        </div>
+-      )}
++      {error && <div className="custom-alert mb-4 text-center mx-auto alert alert-info" style={{ maxWidth: '500px' }}>{error}</div>}
+ 
+       <div className="row justify-content-center">
+-        <div className="col-md-8">
+-          <div className="card shadow border-0 rounded-4">
+-            <div className="card-body p-5 text-center">
+-              <h3 className="text-success mb-4">{CurrentDay}'s Special</h3>
+-              
+-              {loading ? (
+-                <div className="py-4">
+-                  <div className="spinner-border text-success" role="status">
+-                    <span className="visually-hidden">Loading...</span>
+-                  </div>
++        <div className="col-lg-8">
++          <div className="glass-card menu-card p-5">
++            <h3 className="text-lime text-center mb-5 border-bottom border-secondary pb-3">{CurrentDay}</h3>
++
++            {loading ? (
++              <div className="text-center py-5 text-lime">Loading...</div>
++            ) : (
++              <div className="row g-5">
++                <div className="col-md-6 d-flex flex-column align-items-center text-center menu-divider">
++                  <h5 className="fw-bold text-uppercase">Lunch</h5>
++                  <p className="text-muted fs-5 mt-2">{currentMenu.lunch}</p>
+                 </div>
+-              ) : (
+-                <div className="row g-4">
+-                  <div className="col-md-6 border-end">
+-                    <div className="p-3">
+-                      <span className="fs-1">ΓÿÇ∩╕Å</span>
+-                      <h5 className="fw-bold mt-2">Lunch</h5>
+-                      <p className="text-muted">{currentMenu.lunch}</p>
+-                    </div>
+-                  </div>
+-                  <div className="col-md-6">
+-                    <div className="p-3">
+-                      <span className="fs-1">≡ƒîÖ</span>
+-                      <h5 className="fw-bold mt-2">Dinner</h5>
+-                      <p className="text-muted">{currentMenu.dinner}</p>
+-                    </div>
+-                  </div>
++                <div className="col-md-6 d-flex flex-column align-items-center text-center">
++                  <h5 className="fw-bold text-uppercase">Dinner</h5>
++                  <p className="text-muted fs-5 mt-2">{currentMenu.dinner}</p>
+                 </div>
+-              )}
++              </div>
++            )}
++          </div>
+ 
+-            </div>
++          <div className="text-center mt-5">
++            <button className="btn-neon-outline px-5" onClick={() => navigate("/calories")}>
++              Analyze Macros
++            </button>
+           </div>
+         </div>
+-        <div className="text-center mt-4">
+-      <button className="btn btn-warning rounded-pill px-4" onClick={() => navigate("/calories")} >
+-        ≡ƒöÑ View Calories
+-      </button>
+-    </div>
+       </div>
+     </div>
++    </div>
+   );
+ };
+ 
