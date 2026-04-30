@@ -13,6 +13,8 @@ public interface FoodPlanRepository extends JpaRepository<FoodPlan, Long> {
 
     List<FoodPlan> findByExpiryDateAndIsActiveTrue(LocalDate expiryDate);
     
+    List<FoodPlan> findByExpiryDateAndIsActiveTrueAndExpiryReminderSentFalse(LocalDate expiryDate);
+
     List<FoodPlan> findByExpiryDateBeforeAndIsActiveTrue(LocalDate date);
     
     Optional<FoodPlan> findByUserIdAndIsActiveTrue(Long userId);
