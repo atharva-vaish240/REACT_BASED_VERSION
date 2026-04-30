@@ -66,15 +66,15 @@ const Checkout = () => {
                         <ul className="list-group mb-3">
                             <li className="list-group-item d-flex justify-content-between lh-sm">
                                 <div><h6 className="my-0">{user?.plan} Plan</h6><small className="text-muted">Standard Tiffin</small></div>
-                                <span className="text-muted">₹{price}</span>
+                                <span className="text-muted">&#8377;{price}</span>
                             </li>
                             <li className="list-group-item d-flex justify-content-between bg-light">
                                 <div className="text-accent"><h6 className="my-0">Promo Code</h6><small>URBAN50</small></div>
-                                <span className="text-accent">-₹{discount}</span>
+                                <span className="text-accent">-&#8377;{discount}</span>
                             </li>
                             <li className="list-group-item d-flex justify-content-between">
                                 <span>Total (INR)</span>
-                                <strong>₹{finalTotal}</strong>
+                                <strong>&#8377;{finalTotal}</strong>
                             </li>
                         </ul>
                         <button className="w-100 btn btn-success btn-lg" type="button" onClick={handlePay} disabled={loading}>
@@ -91,8 +91,8 @@ const Checkout = () => {
                             <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
                         <div className="modal-body">
-                            <p className="mb-3">Total Amount: <strong>₹{finalTotal}</strong></p>
-                            {orderPlaced && <p className="text-success fw-bold">✅ Your order has been saved!</p>}
+                            <p className="mb-3">Total Amount: <strong>&#8377;{finalTotal}</strong></p>
+                            {orderPlaced && <p className="text-success fw-bold">Your order has been saved!</p>}
                             <img src="/paymentQr.jpg" alt="UPI QR Code" className="img-fluid border p-2 rounded" style={{ maxWidth: "250px" }} />
                             <p className="text-muted mt-3 small">Scan with GPay, PhonePe, or Paytm</p>
                         </div>

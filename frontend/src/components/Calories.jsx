@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCalories } from "../services/api";
 
 // Fallback data matching original frontend (used if API fails)
@@ -13,6 +13,7 @@ const fallbackCaloriesData = {
 };
 
 const Calories = () => {
+  const navigate = useNavigate();
   const [caloriesData, setCaloriesData] = useState(fallbackCaloriesData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,46 +32,47 @@ const Calories = () => {
   }, []);
 
   return (
-    <div className="container py-5">
-      <h2 className="text-center fw-bold mb-4">🔥 Calories Info</h2>
-
-      {error && (
-        <div className="alert alert-warning text-center py-1 mb-3">
-          <small>⚠️ {error}</small>
+    <div className="calories-bg">
+      <div className="container py-5 min-vh-100">
+        <div className="text-center mb-5">
+          <h2 className="fw-bold fs-1 mb-3">
+            Calories <span className="text-lime">Info</span>
+          </h2>
         </div>
-      )}
 
-      <div className="card shadow rounded-4 p-4">
-        {loading ? (
-          <div className="text-center py-4">
-            <div className="spinner-border text-success" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
+        {error && (
+          <div className="alert alert-warning text-center mx-auto mb-4" style={{ maxWidth: '800px' }}>
+             {error}
           </div>
-        ) : (
-          Object.entries(caloriesData).map(([item, data]) => (
-            <div key={item} className="border-bottom py-3">
-              <div className="d-flex justify-content-between fw-bold">
-                <span>{item}</span>
-                <span>{data.calories} kcal</span>
-              </div>
-              <div className="mt-1">
-                <small className="text-muted">
-                  ✅ Recommended for:{" "}
-                  {Array.isArray(data.recommendedFor)
-                    ? data.recommendedFor.join(", ")
-                    : data.recommendedFor}
-                </small>
-              </div>
-            </div>
-          ))
         )}
-      </div>
 
-      <div className="text-center mt-4">
-        <Link to="/menu" className="btn btn-outline-primary">
-          ⬅ Back to Menu
-        </Link>
+        <div className="glass-card mx-auto p-4" style={{ maxWidth: '800px' }}>
+          {loading ? (
+             <div className="text-center py-4 text-lime">
+               <div className="spinner-border" role="status">
+                 <span className="visually-hidden">Loading...</span>
+               </div>
+             </div>
+          ) : (
+             Object.entries(caloriesData).map(([item, data], index) => (
+               <div key={index} className="d-flex justify-content-between align-items-center py-4 border-bottom border-secondary">
+                 <div>
+                   <h5 className="fw-bold mb-1">{item}</h5>
+                   <span className="text-lime small">
+                     Recommended for: {Array.isArray(data.recommendedFor) ? data.recommendedFor.join(", ") : data.recommendedFor}
+                   </span>
+                 </div>
+                 <div className="fw-bold fs-5">{data.calories} kcal</div>
+               </div>
+             ))
+          )}
+        </div>
+
+        <div className="text-center mt-5">
+          <button className="btn-neon-outline px-5" onClick={() => navigate("/menu")}>
+            Back to Menu
+          </button>
+        </div>
       </div>
     </div>
   );
