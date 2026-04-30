@@ -7,6 +7,7 @@ import com.urbanbite.model.Role;
 import com.urbanbite.model.User;
 import com.urbanbite.repository.UserRepository;
 import com.urbanbite.security.JwtUtil;
+import com.urbanbite.service.email.EmailService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,16 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
 
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       JwtUtil jwtUtil) {
+                       JwtUtil jwtUtil,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.emailService = emailService;
     }
 
     /**
@@ -49,6 +53,14 @@ public class AuthService {
                 .build();
 
         user = userRepository.save(user);
+
+        // Send Welcome Email
+        String subject = "Welcome to UrbanBite! 🍽️";
+        String body = "Hi " + user.getName() + ",\n\n" +
+                "Welcome to UrbanBite! We are excited to have you on board.\n" +
+                "You have selected the " + user.getPlan() + " plan. Get ready to enjoy chef-crafted, macro-balanced meals.\n\n" +
+                "Thank you!";
+        emailService.sendSimpleEmail(user.getEmail(), subject, body);
 
         // Generate JWT
         String token = jwtUtil.generateToken(user.getEmail());

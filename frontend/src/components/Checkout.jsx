@@ -92,7 +92,7 @@ const Checkout = () => {
                         </div>
                         <div className="modal-body">
                             <p className="mb-3">Total Amount: <strong>&#8377;{finalTotal}</strong></p>
-                            {orderPlaced && <p className="text-success fw-bold">Your order has been saved!</p>}
+                            {orderPlaced && <p className="text-success fw-bold">Your order has been saved! An email confirmation has been sent.</p>}
                             <img src="/paymentQr.jpg" alt="UPI QR Code" className="img-fluid border p-2 rounded" style={{ maxWidth: "250px" }} />
                             <p className="text-muted mt-3 small">Scan with GPay, PhonePe, or Paytm</p>
                         </div>
