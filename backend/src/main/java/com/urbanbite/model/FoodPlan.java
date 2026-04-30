@@ -37,6 +37,10 @@ public class FoodPlan {
     @Builder.Default
     private boolean isActive = true;
 
+    @Column(name = "expiry_reminder_sent", nullable = false)
+    @Builder.Default
+    private boolean expiryReminderSent = false;
+
     @Column(name = "created_at", updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
