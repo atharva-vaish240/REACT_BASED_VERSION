@@ -1,0 +1,89 @@
+name: Deploy UrbanBite to AWS
+
+# This pipeline runs every time you push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Grab the latest code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Java 21 for the Spring Boot backend
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      # 3. Build the Backend WAR file
+      - name: Build Backend
+        working-directory: ./backend
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
+
+      # 4. Setup Node.js for the React/Vite frontend
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 5. Build the Frontend
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+
+      # 6. Transfer files to a temporary folder on the EC2 instance
+      - name: Copy files via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          # Copy the compiled ROOT.war and the dist folder
+          source: "backend/target/ROOT.war,frontend/dist"
+          target: "~/deploy-temp"
+          # I removed strip_components so the paths match exactly what the SSH script below expects.
+
+      # 7. Move files to Nginx and Tomcat directories
+      - name: Execute Deployment Scripts via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # --- Deploy Backend ---
+            # Stop Tomcat gracefully to prevent Metaspace memory leaks from hot-redeployment
+            sudo systemctl stop tomcat10
+            
+            # Remove old WAR and extracted folder
+            sudo rm -rf /var/lib/tomcat10/webapps/ROOT /var/lib/tomcat10/webapps/ROOT.war
+            
+            # Move the new WAR file to Tomcat's webapps folder
+            sudo mv ~/deploy-temp/backend/target/ROOT.war /var/lib/tomcat10/webapps/
+            
+            # Start Tomcat
+            sudo systemctl start tomcat10
+            
+            # --- Deploy Frontend ---
+            # Clear out the old React build
+            sudo rm -rf /var/www/html/*
+            
+            # Move the new Vite build to Nginx's public folder
+            sudo mv ~/deploy-temp/frontend/dist/* /var/www/html/
+            
+            # Restart Nginx just to be absolutely sure everything reloads
+            sudo systemctl restart nginx
+            
+            # Clean up the temporary folder
+            rm -rf ~/deploy-temp
