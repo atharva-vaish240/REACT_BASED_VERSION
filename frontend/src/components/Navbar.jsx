@@ -9,7 +9,7 @@ const Navbar = () => {
             <nav className="navbar navbar-expand-lg floating-navbar">
                 <div className="container-fluid px-4">
                     <Link className="navbar-brand brand-text" to="/">
-                        UrbanBite<span className="brand-dot">.</span>
+                        UrbanBite!!!!<span className="brand-dot">.</span>
                     </Link>
                     <button className="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span className="navbar-toggler-icon"></span>
