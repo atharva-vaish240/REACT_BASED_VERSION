@@ -94,7 +94,7 @@ const Home = () => {
                             <img className="ub-slide-bg" src={slide.image} alt={slide.alt} />
                             <div className="ub-slide-content">
                                 <div className="ub-slide-tag">{slide.tag}</div>
-                                <h1 className="ub-slide-title">{slide.title}</h1>
+                                <h2 className="ub-slide-title">{slide.title}</h2>
                                 <p className="ub-slide-text">{slide.text}</p>
                                 {slide.to.startsWith('#') ? (
                                     <a className="ub-slide-cta" href={slide.to}>{slide.cta}</a>
