@@ -38,6 +38,8 @@ jobs:
       # 5. Build the Frontend
       - name: Build Frontend
         working-directory: ./frontend
+        env:
+          VITE_API_URL: "http://${{ secrets.EC2_HOST }}:8080/api"
         run: |
           npm install
           npm run build
